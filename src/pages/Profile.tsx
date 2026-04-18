@@ -144,7 +144,7 @@ export default function Profile() {
              <h3 className="text-sm font-bold text-[var(--color-text-main)]">Role Switcher (Testing)</h3>
           </div>
           <p className="text-[11px] text-[var(--color-text-muted)] mb-4 leading-relaxed">
-            Switch between roles to test the full interconnected workflow (Donor -> NGO -> Volunteer).
+            Switch between roles to test the full interconnected workflow (Donor {'->'} NGO {'->'} Volunteer).
           </p>
           <div className="grid grid-cols-3 gap-2">
             {[
