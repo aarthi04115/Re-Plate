@@ -32,6 +32,7 @@ export default function ImpactDashboard() {
   const [totalDonations, setTotalDonations] = useState(0);
   const [peakDay, setPeakDay] = useState('—');
   const [activeDays, setActiveDays] = useState(0);
+  const [leaderboard, setLeaderboard] = useState<{ topDonors: { name: string; value: number }[]; topVolunteers: { name: string; value: number }[] }>({ topDonors: [], topVolunteers: [] });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,47 +68,45 @@ export default function ImpactDashboard() {
         setActiveDays(points.filter(p => p.donations > 0).length);
         const peak = points.reduce((a, b) => (b.donations > a.donations ? b : a), points[0]);
         if (peak && peak.donations > 0) setPeakDay(peak.date);
-      } else if (user.role === 'ngo') {
-        const today = new Date();
-        const buckets: Record<string, number> = {};
-        for (let i = 29; i >= 0; i--) {
-          const d = new Date(today);
-          d.setDate(today.getDate() - i);
-          buckets[d.toISOString().slice(0, 10)] = 0;
-        }
-
-        // Mock aggregated activity for NGO
-        const mockPoints = Object.keys(buckets).map((date, idx) => ({
-          date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-          donations: Math.floor(Math.random() * 5) + (idx % 3 === 0 ? 2 : 0),
-        }));
-
-        setChartData(mockPoints);
-        const total = mockPoints.reduce((s, p) => s + p.donations, 0);
-        setTotalDonations(total);
-        setActiveDays(mockPoints.filter(p => p.donations > 0).length);
-        const peak = mockPoints.reduce((a, b) => (b.donations > a.donations ? b : a), mockPoints[0]);
-        if (peak && peak.donations > 0) setPeakDay(peak.date);
       }
+      
+      // Fetch dynamic leaderboard data
+      const { data: allUsers } = await supabase.from('users').select('id, name, role');
+      const { data: allDonations } = await supabase.from('donations').select('donor_id, claimed_by_volunteer_id, status');
+
+      if (allUsers && allDonations) {
+        const donorMap: Record<string, number> = {};
+        const volMap: Record<string, number> = {};
+
+        allDonations.forEach(d => {
+          if (d.donor_id) donorMap[d.donor_id] = (donorMap[d.donor_id] || 0) + 1;
+          if (d.claimed_by_volunteer_id && d.status === 'completed') {
+            volMap[d.claimed_by_volunteer_id] = (volMap[d.claimed_by_volunteer_id] || 0) + 1;
+          }
+        });
+
+        const topD = allUsers
+          .filter(u => u.role === 'donor')
+          .map(u => ({ name: u.name, value: donorMap[u.id] || 0 }))
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 4);
+
+        const topV = allUsers
+          .filter(u => u.role === 'volunteer')
+          .map(u => ({ name: u.name, value: volMap[u.id] || 0 }))
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 4);
+
+        setLeaderboard({ topDonors: topD, topVolunteers: topV });
+      }
+
       setLoading(false);
     };
 
     fetchData();
   }, [user]);
 
-  const topDonors = [
-    { name: 'Fresh Bakery', value: 42 },
-    { name: 'Green Grocers', value: 38 },
-    { name: 'Hotel Grand', value: 25 },
-    { name: 'City Cafe', value: 18 }
-  ];
-
-  const topVolunteers = [
-    { name: 'Alex M.', value: 55 },
-    { name: 'Sarah J.', value: 41 },
-    { name: 'Raj K.', value: 33 },
-    { name: 'Priya S.', value: 29 }
-  ];
+  const { topDonors, topVolunteers } = leaderboard;
 
   const noData = !loading && chartData.every(d => d.donations === 0);
 
