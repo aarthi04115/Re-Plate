@@ -215,7 +215,7 @@ ${contextSummary}`;
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-24 right-6 z-40 w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        className={`fixed bottom-24 left-6 z-40 w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         style={{ background: 'linear-gradient(135deg, #008C44, #22C55E)', boxShadow: '0 8px 30px rgba(0, 140, 68, 0.4)' }}
       >
         <div className="relative">

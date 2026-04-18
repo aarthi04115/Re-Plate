@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { supabase, type RtPayload } from '../services/supabaseClient';
+import { supabase } from '../services/supabaseClient';
 import { useAuth } from '../context/AuthContext';
 
 type SidebarNotif = {
@@ -34,7 +34,7 @@ export const RealtimeSidebar = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const addNotif = (payload: RtPayload) => {
+  const addNotif = (payload: any) => {
     const food = payload.new?.food_type || payload.old?.food_type || 'Food';
     let key = '';
 
@@ -66,7 +66,7 @@ export const RealtimeSidebar = () => {
     const ch = supabase
       .channel('rt-sidebar-global')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'donations' }, (payload: any) => {
-        addNotif(payload as RtPayload);
+        addNotif(payload);
       })
       .subscribe();
     return () => { supabase.removeChannel(ch); };
