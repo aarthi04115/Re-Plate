@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabaseClient';
 import { Navigation } from '../components/Shared';
+import OmniAIAssistant from '../components/OmniAIAssistant';
 
 const roleLabel: Record<string, string> = {
   donor:     '🍱 Donor',
@@ -102,6 +103,8 @@ export default function Profile() {
           <span>🚪</span> Sign Out
         </button>
       </main>
+
+      {user?.role && <OmniAIAssistant role={user.role as 'donor' | 'volunteer' | 'ngo'} />}
     </div>
   );
 }

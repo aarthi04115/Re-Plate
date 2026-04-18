@@ -6,6 +6,7 @@ import { supabase } from '../services/supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { toast } from '../components/Toast';
+import OmniAIAssistant from '../components/OmniAIAssistant';
 import type { Listing, ListingStatus } from '../types';
 import L from 'leaflet';
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
@@ -407,6 +408,8 @@ export default function VolunteerDashboard() {
           </div>
         )}
       </main>
+
+      <OmniAIAssistant role="volunteer" />
     </div>
   );
 }
