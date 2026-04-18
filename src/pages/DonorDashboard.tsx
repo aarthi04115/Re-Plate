@@ -6,6 +6,7 @@ import { supabase } from '../services/supabaseClient';
 import { useAuth } from '../context/AuthContext';
 import { toast } from '../components/Toast';
 import { DonorRatingBadge } from '../components/ReviewModal';
+import OmniAIAssistant from '../components/OmniAIAssistant';
 import type { Listing, ListingStatus, DonorRating } from '../types';
 
 export default function DonorDashboard() {
@@ -200,6 +201,8 @@ export default function DonorDashboard() {
       >
         +
       </button>
+
+      <OmniAIAssistant role="donor" />
     </div>
   );
 }

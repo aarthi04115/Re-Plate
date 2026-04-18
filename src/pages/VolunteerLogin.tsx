@@ -30,16 +30,40 @@ export default function VolunteerLogin() {
     }
 
     // Use the persistent signUp/signIn logic from mock Supabase
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
        email,
        password
     });
 
-    if (error) {
-       // If not found, try to auto-signup for volunteers to make it easy
-       await supabase.auth.signUp({ email, password, role: 'volunteer' });
-       navigate('/volunteer-dashboard');
+    if (signInError) {
+       // If login fails, try to auto-signup for volunteers to make it easy
+       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({ email, password });
+       
+       if (!signUpError && signUpData.user) {
+         // Create the public user profile with the correct role
+         await supabase.from('users').insert([{
+           id: signUpData.user.id,
+           email: email,
+           name: email.split('@')[0], // Fallback name
+           role: 'volunteer',
+           address: 'Volunteer Station'
+         }]);
+         navigate('/volunteer-dashboard');
+       } else {
+         toast(signUpError?.message || 'Login failed', 'error');
+         setShake(true);
+       }
     } else {
+       // Check if profile exists, if not create it (safe guard)
+       const { data: profile } = await supabase.from('users').select('role').eq('id', signInData.user.id).single();
+       if (!profile) {
+         await supabase.from('users').insert([{
+           id: signInData.user.id,
+           email: email,
+           name: email.split('@')[0],
+           role: 'volunteer'
+         }]);
+       }
        navigate('/volunteer-dashboard');
     }
   };
