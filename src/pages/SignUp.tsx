@@ -56,7 +56,6 @@ export default function SignUp() {
           id: user.id,
           name: formData.name,
           email: formData.email,
-          password: formData.password,
           role: role,
           phone: formData.phone,
           address: formData.location
