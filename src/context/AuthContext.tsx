@@ -9,14 +9,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchUserProfile = async (userId: string) => {
-    const { data, error } = await supabase.from('users').select('*').eq('id', userId).single();
-    if (data && !error) {
-      setUser(data as User);
-    } else {
-      console.error("Failed to fetch user profile:", error);
+    try {
+      const { data, error } = await supabase.from('users').select('*').eq('id', userId).single();
+      if (data && !error) {
+        setUser(data as User);
+      } else {
+        if (error) console.error("Profile fetch error:", error.message);
+        setUser(null);
+      }
+    } catch (err) {
+      console.error("Auth context error:", err);
       setUser(null);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
