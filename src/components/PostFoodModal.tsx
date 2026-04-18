@@ -72,7 +72,6 @@ export const PostFoodModal = ({ isOpen, onClose, onSuccess }: PostFoodModalProps
         servings: parseInt(formData.servings, 10),
         freshness_hours: parseInt(formData.freshnessHours, 10),
         pickup_location: formData.pickupLocation,
-        location: formData.pickupLocation,
         phone: user.phone || 'N/A',
         description: formData.description,
         status: 'available'
