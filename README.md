@@ -1,277 +1,114 @@
-# 🍱 Re-Plate — Food Rescue Platform
+# 🍱 RePlate — Premium Food Rescue Platform
 
-> **Connecting surplus food donors with NGOs and volunteers to fight hunger, one plate at a time.**
+<div align="center">
 
-Re-Plate is a real-time food rescue web application built for a hackathon. It enables donors to post surplus food, NGO receivers to claim it, and volunteers to pick up and deliver — all tracked live with Supabase Realtime.
+![RePlate Banner](https://img.shields.io/badge/RePlate-Premium_Food_Rescue-008C44?style=for-the-badge&logo=react&logoColor=white)
+![Build Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
+![Tech Stack](https://img.shields.io/badge/Tech_Stack-React_19_|_Vite_8_|_Supabase-blue?style=for-the-badge)
+![AI Powered](https://img.shields.io/badge/AI-Gemini_1.5_Flash-orange?style=for-the-badge)
 
----
+**Connecting surplus food donors with NGOs and volunteers to fight hunger, one plate at a time.**
 
-## 🌐 Live Demo
+[Live Demo](https://re-plate-demo.vercel.app) • [View Workflow](#-smart-workflow) • [Tech Stack](#%EF%B8%8F-tech-stack)
 
-> Deployed on [Vercel / Netlify] *(add your link here)*
-
----
-
-## 📸 Screenshots
-
-| Donor Dashboard | Receiver Hub | Volunteer Hub |
-|---|---|---|
-| Post surplus food | Browse & claim donations | Accept and deliver pickups |
+</div>
 
 ---
 
-## ✨ Features
+## 🤖 Smart RePlate AI Bot (Omni-LLM)
 
-### 🧑‍🍳 Donor
-- Post surplus food with details: food type, quantity, servings, freshness hours, pickup location, description
-- Real-time status notifications when food is:
-  - 📬 Requested by a receiver
-  - 🚴 Picked up by a volunteer
-  - 🎉 Successfully delivered
-- Live dashboard showing all posted listings with status badges
+RePlate features a state-of-the-art **Multimodal AI Assistant** powered by **Gemini 1.5 Flash**. It’s not just a chatbot—it’s the brain of the platform.
 
-### 🏢 Receiver (NGO)
-- Browse all available food donations in real-time
-- Filter donations by location (text-based match)
-- **Claim Food** with race-condition safety (only one receiver can claim at a time)
-- Track claimed food through Pending → In Delivery tabs
-
-### 🛵 Volunteer
-- View all claimed (pending pickup) food donations
-- Auto-detect GPS location or enter manually
-- Filter nearby pickups by location text
-- **Accept Pickup** with race-condition safety
-- **Mark as Delivered** to complete the rescue chain
-- Interactive map view (OpenStreetMap / dark mode Carto)
-
-### ⚡ Real-Time
-- All dashboards auto-refresh via **Supabase Realtime** subscriptions
-- No manual refresh needed — changes propagate instantly
-
-### 🔔 Toast Notifications
-- Success / error toasts for every action (claim, pickup, deliver, post)
+*   **👁️ Visual Intelligence**: Upload images of surplus food; the AI analyzes quantity, type, and freshness automatically.
+*   **🎙️ Voice Navigation**: Full Speech-to-Text (STT) and Text-to-Speech (TTS) integration for hands-free operation.
+*   **🌍 Hyper-Local & Multilingual**: Supports **English, Tamil, Hindi, and Telugu** to ensure accessibility for every local hero.
+*   **🧠 Context-Aware**: Real-time access to the database allows the AI to suggest nearby food rescues and guide volunteers.
 
 ---
 
-## 🔄 Status Flow
+## ✨ Premium UI Features
 
-```
-available ──► pending_receiver ──► in_delivery ──► completed
-   (Donor       (Receiver claims)   (Volunteer      (Delivered)
-   posts food)                       accepts)
-```
+RePlate isn't just functional—it's designed to feel like a **top-tier food-tech application**.
 
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | React 19 + TypeScript |
-| Build Tool | Vite 8 |
-| Styling | TailwindCSS v4 + Vanilla CSS |
-| Backend / DB | Supabase (PostgreSQL) |
-| Real-Time | Supabase Realtime (Postgres Changes) |
-| Auth | Supabase Auth |
-| Maps | React-Leaflet + OpenStreetMap |
-| Charts | Recharts |
-| Routing | React Router DOM v7 |
-| Icons | Lucide React |
+*   **🌑 Modern Dark Aesthetic**: A deep navy background (`#0B0F19`) with vibrant emerald accents (`#008C44`).
+*   **🎭 Physics-Based Animations**: Powered by **Framer Motion**, every interaction feels fluid, responsive, and alive.
+*   **💊 Modern Design System**: Uses the "Pill UI" language—curved inputs, soft glassmorphism, and high-impact badges.
+*   **🗺️ Interactive Maps**: Dark-themed interactive maps (Leaflet) for real-time tracking of food pickups.
+*   **📊 Impact Analytics**: Dynamic charts (Recharts) visualizing food waste reduction and lives touched.
 
 ---
 
-## 🗃️ Database Schema
+## 📦 Tech Stack
 
-### `users` table
-| Column | Type | Description |
-|---|---|---|
-| `id` | uuid (PK) | Supabase Auth user ID |
-| `name` | text | Full name |
-| `email` | text | Email address |
-| `phone` | text | Phone number |
-| `address` | text | Default address |
-| `role` | text | `donor` / `receiver` / `volunteer` |
+| Component | Technology |
+| :--- | :--- |
+| **Frontend** | React 19 (Mainline) + TypeScript |
+| **Build Engine** | Vite 8 (Ultra-fast HMR) |
+| **AI Engine** | Google Gemini 1.5 Flash (Multimodal) |
+| **Real-Time DB** | Supabase (PostgreSQL + Realtime Subs) |
+| **Auth** | Supabase Auth (Role-based security) |
+| **Styling** | Tailwind CSS v4 + Framer Motion |
+| **Mapping** | React-Leaflet + OpenStreetMap |
+| **Analytics** | Recharts |
 
-### `donations` table
-| Column | Type | Description |
-|---|---|---|
-| `id` | uuid (PK) | Auto-generated |
-| `donor_id` | uuid (FK) | References `users.id` |
-| `food_type` | text | Type of food |
-| `quantity` | text | e.g. "2 large trays" |
-| `servings` | integer | Estimated servings |
-| `freshness_hours` | integer | Hours food stays fresh |
-| `pickup_location` | text | Pickup address |
-| `phone` | text | Contact number |
-| `description` | text | Additional notes |
-| `status` | text | `available` / `pending_receiver` / `in_delivery` / `completed` |
-| `accepted_by_receiver_id` | uuid | Receiver who claimed it |
-| `claimed_by_volunteer_id` | uuid | Volunteer who picked it up |
-| `created_at` | timestamp | Auto-generated |
+---
+
+## 🔄 Smart Workflow
+
+1.  **Post**: Donors (Restaurants/Events) post surplus food using the AI-assisted modal.
+2.  **Claim**: NGOs and Receivers browse a real-time feed and claim food with race-condition safety.
+3.  **Deliver**: Volunteers receive instant notifications and use the interactive map to track the pickup-to-delivery route.
+4.  **Impact**: All data is aggregated into dynamic dashboards for transparency and reporting.
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+
-- A [Supabase](https://supabase.com) project
+*   Node.js 18+
+*   Supabase Account
+*   Google Gemini API Key
 
-### 1. Clone the repo
+### 1. Clone & Install
 ```bash
-git clone https://github.com/rthi4115/Re-Plate.git
+git clone https://github.com/aarthi04115/Re-Plate.git
 cd Re-Plate
-```
-
-### 2. Install dependencies
-```bash
 npm install
 ```
 
-### 3. Set up environment variables
-
-Create a `.env` file in the project root:
+### 2. Environment Setup
+Create a `.env` file in the root:
 ```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_key
+VITE_GEMINI_API_KEY=your_gemini_key
 ```
 
-> Find these in your Supabase project: **Settings → API**
-
-### 4. Set up Supabase tables
-
-Run the following SQL in your Supabase SQL Editor:
-
-```sql
--- Users table
-create table users (
-  id uuid primary key references auth.users(id),
-  name text,
-  email text,
-  phone text,
-  address text,
-  role text check (role in ('donor', 'receiver', 'volunteer'))
-);
-
--- Donations table
-create table donations (
-  id uuid primary key default gen_random_uuid(),
-  donor_id uuid references users(id),
-  food_type text not null,
-  quantity text,
-  servings integer,
-  freshness_hours integer,
-  pickup_location text,
-  phone text,
-  description text,
-  status text default 'available' check (status in ('available', 'pending_receiver', 'in_delivery', 'completed')),
-  accepted_by_receiver_id uuid references users(id),
-  claimed_by_volunteer_id uuid references users(id),
-  created_at timestamptz default now()
-);
-
--- Enable Row Level Security
-alter table users enable row level security;
-alter table donations enable row level security;
-
--- RLS Policies (allow authenticated users to read/write)
-create policy "Allow all for authenticated" on users for all using (auth.role() = 'authenticated');
-create policy "Allow all for authenticated" on donations for all using (auth.role() = 'authenticated');
-
--- Enable Realtime
-alter publication supabase_realtime add table donations;
-```
-
-### 5. Run the development server
+### 3. Run Development
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+---
+
+## 🛠️ Security & Scaling
+
+*   **Row Level Security (RLS)**: Enforced at the database level via Supabase policies.
+*   **Race-Condition Safety**: State guards prevent multiple users from claiming the same listing simultaneously.
+*   **Multilingual Support**: Built-in voice and text translation for diverse regions.
 
 ---
 
-## 📁 Project Structure
+## 👥 Contributors & Credits
 
-```
-src/
-├── components/
-│   ├── AnalyticsChart.tsx   # Recharts analytics graphs
-│   ├── ChatBot.tsx          # AI chat assistant
-│   ├── Icons.tsx            # SVG icon components
-│   ├── PostFoodModal.tsx    # Donor food posting modal
-│   ├── RealtimeSidebar.tsx  # Live feed sidebar
-│   ├── Shared.tsx           # Navigation, ListingCard, shared UI
-│   └── Toast.tsx            # Toast notification system
-├── context/
-│   ├── AuthContext.tsx      # Supabase Auth context
-│   ├── DonationContext.tsx  # Demo donation context
-│   └── ThemeContext.tsx     # Dark/Light theme context
-├── pages/
-│   ├── Login.tsx            # Login page
-│   ├── SignUp.tsx           # Sign up page
-│   ├── DonorDashboard.tsx   # Donor workflow
-│   ├── ReceiverDashboard.tsx# Receiver/NGO workflow
-│   ├── VolunteerDashboard.tsx # Volunteer workflow
-│   ├── ImpactDashboard.tsx  # Impact analytics
-│   ├── VolunteerImpactDashboard.tsx
-│   └── VolunteerLogin.tsx
-├── services/
-│   └── supabaseClient.ts    # Supabase client init
-├── types/
-│   └── index.ts             # TypeScript interfaces
-├── App.tsx                  # Routing
-├── main.tsx                 # Entry point
-└── index.css                # Global styles & design tokens
-```
-
----
-
-## 👥 User Roles
-
-| Role | Description |
-|---|---|
-| **Donor** | Restaurants, households, events with surplus food |
-| **Receiver** | NGOs, shelters, food banks that need food |
-| **Volunteer** | Individuals who pick up and deliver food |
-
----
-
-## 🔒 Data Safety
-
-- **Multiple claim prevention**: Receiver claim uses `.eq('status', 'available')` guard — only the first claimant succeeds
-- **Multiple pickup prevention**: Volunteer accept uses `.eq('status', 'pending_receiver')` guard
-- **Double-tap prevention**: UI buttons are disabled while requests are in flight
-- **Auth protection**: All Supabase queries require authenticated session
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/my-feature`
-3. Commit your changes: `git commit -m 'Add some feature'`
-4. Push to the branch: `git push origin feature/my-feature`
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
-## 🙏 Acknowledgements
-
-- [Supabase](https://supabase.com) — Backend & Realtime
-- [OpenStreetMap](https://www.openstreetmap.org) — Map tiles
-- [Leaflet](https://leafletjs.com) — Interactive maps
-- [Recharts](https://recharts.org) — Analytics charts
-- Built with ❤️ for a hackathon to fight food waste
+*   **Supabase** — Backend & Real-time engine
+*   **Google Gemini** — Multimodal AI Brain
+*   **Leaflet** — Mapping services
+*   **Vercel** — Production deployment
 
 ---
 
 <div align="center">
-  <strong>Re-Plate</strong> — Because every plate matters. 🍽️
+  <h3><strong>RePlate</strong> — Because every plate matters. 🍽️</h3>
+  <p>Built with ❤️ to fight food waste and hunger.</p>
 </div>
