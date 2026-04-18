@@ -25,7 +25,7 @@ export default function OmniAIAssistant({ role }: { role: 'volunteer' | 'ngo' | 
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const GEMINI_KEY = "AIzaSyCPJRare7iHyOV83y5pvB9NyIwV0BqYDms";
+  const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
   const recognition = useRef<any>(null);
   const synth = useRef<SpeechSynthesis | null>(null);
