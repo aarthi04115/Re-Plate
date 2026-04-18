@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Leaf } from '../components/Icons';
 import { useTheme } from '../context/ThemeContext';
 import { supabase } from '../services/supabaseClient';
+import { toast } from '../components/Toast';
 import OmniAIAssistant from '../components/OmniAIAssistant';
 
 export default function VolunteerLogin() {

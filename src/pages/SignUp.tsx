@@ -4,6 +4,7 @@ import { Leaf } from '../components/Icons';
 import { supabase } from '../services/supabaseClient';
 import type { Role } from '../types';
 import { useTheme } from '../context/ThemeContext';
+import { toast } from '../components/Toast';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ export default function SignUp() {
       });
 
       if (authError) {
-        alert(authError.message);
+        toast(authError.message, 'error');
         setIsLoading(false);
         return;
       }
@@ -44,7 +45,7 @@ export default function SignUp() {
       const user = data.user;
 
       if (!user) {
-        alert("User not created");
+        toast("User not created", 'error');
         setIsLoading(false);
         return;
       }
@@ -63,12 +64,12 @@ export default function SignUp() {
       ]);
 
       if (insertError) {
-        alert(insertError.message);
+        toast(insertError.message, 'error');
         setIsLoading(false);
         return;
       }
 
-      alert("Signup successful");
+      toast("Signup successful! Welcome to Re-Plate.", 'success');
       navigate(`/${role}-dashboard`);
     } catch (err: any) {
       setError(err.message || 'Failed to sign up');
