@@ -89,7 +89,7 @@ export default function OmniAIAssistant({ role }: { role: 'volunteer' | 'ngo' | 
     // Fetch live context (listings)
     const { data: donations } = await supabase.from('donations').select('*');
     const available = donations?.filter((d: any) => d.status === 'available') || [];
-    const contextSummary = available.map((d: any) => `- ${d.food_type} at ${d.location} (${d.quantity})`).join('\n');
+    const contextSummary = available.map((d: any) => `- ${d.food_type} at ${d.pickup_location} (${d.quantity})`).join('\n');
 
     const langLabels: Record<string, string> = {
       'ta-IN': 'Tamil',

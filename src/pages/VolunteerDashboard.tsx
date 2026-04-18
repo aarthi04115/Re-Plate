@@ -81,7 +81,7 @@ export default function VolunteerDashboard() {
         quantity: d.quantity,
         servings: d.servings,
         freshnessHours: d.freshness_hours,
-        pickupLocation: d.location || d.pickup_location,
+        pickupLocation: d.pickup_location,
         description: d.description,
         status: d.status as ListingStatus,
         createdAt: d.created_at,
